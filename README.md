@@ -16,10 +16,10 @@ ____
     - Копирование сокращенных ссылок при клике
 ____
     API - http://79.143.31.216/docs#/
-    ![Снимок экрана 2022-09-04 173501](https://user-images.githubusercontent.com/95306473/188319020-d612cec3-c854-41c8-8f79-f540897b4bed.png)
-    ![Снимок экрана 2022-09-04 173532](https://user-images.githubusercontent.com/95306473/188319041-5b028a1c-adca-4eee-95d1-cdd58c8e4cde.png)
-    ![Снимок экрана 2022-09-04 173551](https://user-images.githubusercontent.com/95306473/188319046-3c1dbec7-12d2-4566-b3a7-7d1bac40c70b.png)
-    ![Снимок экрана 2022-09-04 173610](https://user-images.githubusercontent.com/95306473/188319053-9f2ea72d-d569-4d6c-b538-d0d204b9a9e8.png)
+![Снимок экрана 2022-09-04 173501](https://user-images.githubusercontent.com/95306473/188319178-fb13179e-0cd3-4e8f-8c39-d7479873c6f7.png)
+![Снимок экрана 2022-09-04 173532](https://user-images.githubusercontent.com/95306473/188319179-dc8eb977-211f-4b4e-a683-793cd978b7b2.png)
+![Снимок экрана 2022-09-04 173551](https://user-images.githubusercontent.com/95306473/188319180-d4169cd5-084f-4717-8fcd-5f2ed41cb201.png)
+![Снимок экрана 2022-09-04 173610](https://user-images.githubusercontent.com/95306473/188319183-4451b811-fd1b-4831-9324-ea5040ff9b6f.png)
 ____
 **Запуск:**
 - npm install
