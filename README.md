@@ -1,7 +1,8 @@
 ____
  ### :file_cabinet: *`Тестовое задание на вакансию Junior frontend developer`*
 ____
-![testtaskt](https://user-images.githubusercontent.com/95306473/188318614-33175699-ca42-43eb-b3e1-5bd163b8ab5a.gif)
+![testworkapp](https://user-images.githubusercontent.com/95306473/188328120-a980ea48-9954-4624-b3b1-12366798f782.gif)
+
 ____
 **Задачи:**
 - Страница регистрации
