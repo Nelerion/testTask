@@ -18,8 +18,8 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Reg />} />
-          <Route path="/auth" element={<Auth />} />
+          <Route path="/" element={<Auth />} />
+          <Route path="/reg" element={<Reg />} />
           <Route path="/table" element={<TableUs />} />
         </Routes>
       </BrowserRouter>

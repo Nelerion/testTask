@@ -1,53 +1,60 @@
 import styled from "styled-components";
-import { useEffect } from "react";
-import ReactPaginate from "react-paginate";
+import { useEffect, useRef } from "react";
 import { useState } from "react";
 
-const TableUser = styled.div`
-  width: 1200px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: row;
-  flex-wrap: wrap;
+import {TbCopy} from 'react-icons/tb';
+import {AiOutlineArrowUp} from 'react-icons/ai';
+import {AiOutlineArrowDown} from 'react-icons/ai';
+
+
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCellMui from '@mui/material/TableCell';
+import TableRowMui from '@mui/material/TableRow';
+import TableHead from '@mui/material/TableHead';
+import TableFooter from '@mui/material/TableFooter';
+import TablePagination from '@mui/material/TablePagination';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Snackbar from '@mui/material/Snackbar';
+import Slide from '@mui/material/Slide';
+
+const TableRow = styled(TableRowMui)`
+background-color:#f0f1fc;
+-webkit-box-shadow: 4px 4px 8px 0px rgba(0, 0, 0, 0.08);
+-moz-box-shadow: 4px 4px 8px 0px rgba(0, 0, 0, 0.08);
+box-shadow: 4px 4px 8px 0px rgba(0, 0, 0, 0.08);
+
 `;
-const TableTd = styled.div`
-  display: flex;
-  width: 33.33%;
-  background-color: #b3a6a6;
-  box-sizing: border-box;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  text-overflow: ellipsis;
+
+const TableRowHeader = styled(TableRow)`
+  background-color:#b1b1b1;
+  cursor:pointer;
+
 `;
-const TableTdInfo = styled.div`
-  display: flex;
-  width: 100%;
-  height: 40px;
-  background-color: #ece4e4;
-  border: 1px solid #959499;
-  box-sizing: border-box;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
+
+const TableCellHeader = styled(TableCellMui)`
+  text-align:center !important;
+  cursor:pointer;
+  &:hover{
+    background-color:#c7bfbf;
+    transition:all 200ms;
+  }
+`;
+
+const TableCell = styled(TableCellMui)`
+  text-align:center !important;
+`;
+
+const TableCellTarget = styled(TableCell)`
+  max-width:500px;
+  min-width:500px;
+  width:500px;
   white-space: nowrap;
+  overflow: hidden;
   text-overflow: ellipsis;
+`;             
 
-  &:hover {
-    background-color: #cfc7c7;
-    cursor: pointer;
-  }
-`;
-
-const Pagination = styled.span`
-  margin: 2px;
-  font-size: 18px;
-  &:hover {
-    cursor: pointer;
-  }
-`;
-const InputLink = styled.input``;
 const TableBlock = styled.div`
   display: flex;
   flex-direction: column;
@@ -55,7 +62,21 @@ const TableBlock = styled.div`
   align-items: center;
 `;
 
+const FormLink = styled.div`
+display:flex;
+gap:20px;
+margin-top:25px;
+`
+
+const CopyButton = styled(TbCopy)`
+margin-left:5px;
+cursor:pointer;
+`
+
 const USERS_LIMIT = 10;
+
+
+
 
 const TableUs = () => {
   const [usersInfo, setUsersInfo] = useState([]);
@@ -66,6 +87,10 @@ const TableUs = () => {
   const allPage = Math.ceil(allPageUser / 10);
   const arrayPage = [];
   const [sortBy, setSortBy] = useState("asc_short");
+  const [lastCopiedText, setLastCopiedText] = useState('');
+  const [isLoad, setIsLoad] = useState(false)
+
+
   for (let i = 0; i < allPage; i++) {
     arrayPage.push(i);
   }
@@ -75,41 +100,45 @@ const TableUs = () => {
     setNextP(page * USERS_LIMIT);
   };
 
-
-  useEffect(() => {
-    async function getTokens() {
-      await fetch(
-        `http://79.143.31.216/statistics?order=${sortBy}&offset=${nextP}&limit=${USERS_LIMIT}`,
-        {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${localStorage.getItem("user")}`,
-          },
-        }
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          setUsersInfo([...data]);
-        });
-    }
-    getTokens();
-  }, [nextP,sortBy]);
-
-  useEffect(() => {
-    async function getCounterPage() {
-      await fetch(`http://79.143.31.216/statistics?order=asc_short&offset=0`, {
+  async function getDataUsers() {
+    setIsLoad(prev=>!prev)
+    await fetch(
+      `http://79.143.31.216/statistics?order=${sortBy}&offset=${nextP}&limit=${USERS_LIMIT}`,
+      {
         method: "GET",
         headers: {
           Accept: "application/json",
           Authorization: `Bearer ${localStorage.getItem("user")}`,
         },
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          setAllPageUser(data.length);
-        });
-    }
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        setUsersInfo([...data]);
+        setIsLoad(prev=>!prev)
+      });
+  }
+
+
+  useEffect(() => {
+    getDataUsers();
+  }, [nextP,sortBy]);
+
+  async function getCounterPage() {
+    await fetch(`http://79.143.31.216/statistics?order=asc_short&offset=0`, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${localStorage.getItem("user")}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setAllPageUser(data.length);
+      });
+  }
+  useEffect(() => {
+    
     getCounterPage();
   }, []);
 
@@ -143,6 +172,8 @@ const TableUs = () => {
     }
     sendLink();
     setlink("");
+    getDataUsers();
+    getCounterPage()
   };
 
 const sortByShort = ()=>{
@@ -179,48 +210,106 @@ const sortByCounter = ()=>{
         }
         else return 'asc_counter'
     })
-}
+};
 
+  const copyLink = (link)=>{
+    setLastCopiedText(`http://79.143.31.216/s/${link}`);
+    openCopySnackbar();
+    navigator.clipboard.writeText(`http://79.143.31.216/s/${link}`)
+  }
 
+  const [isCopySnackbarOpen, setIsCopySnackbarOpen] = useState(false);
+
+  const openCopySnackbar = () => {
+    setIsCopySnackbarOpen(true);
+  };
+
+  const closeCopySnackbar = () => {
+    setIsCopySnackbarOpen(false);
+  }
+
+  const TransitionLeft = (props) => {
+    return <Slide {...props} direction="left" />;
+  }
+     
   return (
     <TableBlock>
-      <TableUser>
-        <TableTd>
-          <TableTdInfo onClick={sortByShort}>Короткая ссылка</TableTdInfo>
-          {usersInfo.map((user) => (
-            <TableTdInfo>
-              <a href={`http://79.143.31.216/s/${user?.short}`}>
-                {user?.short}
-              </a>
-            </TableTdInfo>
-          ))}
-        </TableTd>
-        <TableTd>
-          <TableTdInfo onClick={sortByTarget}>Полная ссылка</TableTdInfo>
-          {usersInfo.map((user) => (
-            <TableTdInfo>
-              <a href={user?.target}>{user?.target}</a>
-            </TableTdInfo>
-          ))}
-        </TableTd>
-        <TableTd>
-          <TableTdInfo onClick={sortByCounter}>Счетчик переходов</TableTdInfo>
-          {usersInfo.map((user) => (
-            <TableTdInfo>{user?.counter}</TableTdInfo>
-          ))}
-        </TableTd>
-        {arrayPage.map((page) => (
-          <Pagination
-            key={page}
-            onClick={() => changePage(page)}
-            style={{ color: page === currentPage ? "red" : "black" }}
-          >
-            {page}
-          </Pagination>
-        ))}
-      </TableUser>
-      <InputLink value={link} onChange={(e) => setlink(e.target.value)} />
-      <input type="button" value="Создать" onClick={send} />
+
+<Table>
+  <TableHead>
+    <TableRowHeader>
+      <TableCellHeader onClick={sortByShort}>
+        Короткая ссылка
+      {sortBy === 'asc_short' && <AiOutlineArrowDown size={20}/>}
+      {sortBy === 'desc_short' && <AiOutlineArrowUp size={20}/>}
+      </TableCellHeader>
+      <TableCellHeader onClick={sortByTarget}>
+      {sortBy === 'asc_target' && <AiOutlineArrowDown size={20}/>}
+      {sortBy === 'desc_target' && <AiOutlineArrowUp size={20}/>}
+        Полная ссылка
+        </TableCellHeader>
+      <TableCellHeader onClick={sortByCounter}>
+      {sortBy === 'asc_counter' && <AiOutlineArrowDown size={20}/>}
+      {sortBy === 'desc_counter' && <AiOutlineArrowUp size={20}/>}
+        Количество переходов</TableCellHeader>
+    </TableRowHeader>
+  </TableHead>
+  <TableBody>
+    {usersInfo.map(user=><TableRow key={user.id}>
+      <TableCell>
+      {isLoad?'Загрузка':<a href={`http://79.143.31.216/s/${user.short}`}>
+                {user.short}
+              </a>}
+              <CopyButton size={20} onClick={()=>copyLink(user.short)}
+>
+  Copy
+</CopyButton>
+
+      </TableCell>
+      <TableCellTarget>
+      {isLoad?'Загрузка':<a href={user.target}>
+                {user.target}
+              </a>}
+      </TableCellTarget>
+      <TableCell>
+        {isLoad?'Загрузка':user.counter}
+        
+      </TableCell>
+      </TableRow>)}
+  </TableBody>
+  <TableFooter>
+  <TableRow>
+            <TablePagination
+              rowsPerPageOptions={[]}
+              colSpan={3}
+              count={allPageUser}
+              rowsPerPage={USERS_LIMIT}
+              page={currentPage}
+              SelectProps={{
+                inputProps: {
+                  'aria-label': 'rows per page',
+                },
+                native: true,
+              }}
+              onPageChange={(e, page) => changePage(page)}
+            />
+          </TableRow>
+  </TableFooter>
+</Table>
+
+<FormLink>
+<TextField  label="ссылка" variant="standard" value={link} onChange={(e) => setlink(e.target.value)} />
+<Button variant="contained" onClick={send}>Создать ссылку</Button>
+</FormLink>
+    <Snackbar
+        open={isCopySnackbarOpen}
+        onClose={closeCopySnackbar}
+        autoHideDuration={1500}
+        TransitionComponent={TransitionLeft}
+        message="Короткая ссылка скопирована"
+        key={lastCopiedText}
+      />
+      
     </TableBlock>
   );
 };

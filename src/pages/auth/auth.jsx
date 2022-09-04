@@ -2,55 +2,24 @@ import styled from "styled-components";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
 
-const AuthBlock = styled.div`
-  width: 500px;
-  height: 300px;
-  background-color: #fff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 20px;
-  flex-direction: column;
-  -webkit-box-shadow: 4px 4px 8px 0px rgba(0, 0, 0, 0.09);
-  -moz-box-shadow: 4px 4px 8px 0px rgba(0, 0, 0, 0.09);
-  box-shadow: 4px 4px 8px 0px rgba(0, 0, 0, 0.09);
-`;
-const AuthTitle = styled.h1`
-  color: #af9e9e;
-`;
-const AuthUserName = styled.input`
-  color: #3a3434;
-  height: 25px;
-  outline: none;
-  border-radius: 5px;
-  border: 1px solid gray;
-`;
-const AuthPassword = styled(AuthUserName)``;
-const Label = styled.label`
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-`;
-const SubmitForm = styled.input`
-  margin-top: 15px;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #0bacdd;
-  border: 0;
-  width: 150px;
-  height: 25px;
-  font-size: 18px;
-`;
+import {
+  AuthBlock,
+  AuthTitle,
+  AuthUserName,
+  AuthPassword,
+  Label,
+  SubmitForm
+} from './style.jsx';
+
+import Button from '@mui/material/Button';
 
 const Auth = () => {
   const [valueName, setValueName] = useState("");
   const [valuePassword, setValuePassword] = useState("");
   const [url, setUrl] = useState("");
   const [authUser, setAuthUser] = useState(false);
-  const [token, setToken] = useState("");
-
 
   const onChange = (e) => {
     if (e.target.name === "name") {
@@ -115,8 +84,7 @@ const Auth = () => {
 
   return (
     <AuthBlock>
-      <AuthTitle>Authorization</AuthTitle>
-      <form>
+      <AuthTitle>Авторизация</AuthTitle>
         <Label>
           Username
           <AuthUserName
@@ -137,8 +105,9 @@ const Auth = () => {
             name="password"
           ></AuthPassword>
         </Label>
-        <SubmitForm type="submit" value="Send" onClick={(e) => submitForm(e)} />
-      </form>
+        <Button variant="contained" onClick={(e) => submitForm(e)}>Войти</Button>
+      или
+      <Link to="/reg">Зарегистрироваться</Link>
     </AuthBlock>
   );
 };
